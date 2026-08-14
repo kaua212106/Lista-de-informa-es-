@@ -1,272 +1,435 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Lista de informações</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#667eea">
+<link rel="manifest" href="manifest.json">
+<title>Minhas Anotações</title>
 <style>
-body {
-  font-family: Arial;
-  text-align: center;
-  margin-top: 50px;
-}
-
-/* Botão discreto no canto */
-#btnSeguranca {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* Área de senha escondida */
-#areaSenha {
-  display: none;
-  margin-top: 20px;
-}
-
-#mensagem {
-  color: red;
-  font-size: 14px;
-}
-
-input, textarea {
-  padding: 8px;
-  width: 150px;
-}
-
-textarea {
-  width: 300px;
-  height: 100px;
-}
-
-button {
-  padding: 8px;
-  cursor: pointer;
-  margin-left: 5px;
-}
-
-li {
-  margin: 5px 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  list-style-type: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Pauzinhos para arrastar */
-.drag-handle {
-  cursor: move;
-  margin-right: 10px;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+:root{--primary:#667eea;--primary-strong:#5363dc;--primary-soft:rgba(102,116,232,.11);--text:#20283a;--text2:#687187;--text3:#98a0b2;--surface:rgba(255,255,255,.96);--surface-solid:#fff;--border:rgba(31,41,55,.08);--green:#2ca574;--orange:#d99023;--red:#d94c4c;--purple:#7660d7;--shadow-sm:0 4px 14px rgba(27,33,62,.06);--shadow-md:0 12px 30px rgba(27,33,62,.10);--shadow-lg:0 22px 60px rgba(20,25,55,.20);--ease:cubic-bezier(.2,.8,.2,1)}
+html{background:#eef2ff;scroll-behavior:smooth}
+body{min-height:100vh;max-width:650px;margin:0 auto;padding:102px 16px 96px;color:var(--text);position:relative;isolation:isolate;background:radial-gradient(circle at 12% 8%,rgba(255,255,255,.42) 0 7%,transparent 24%),radial-gradient(circle at 88% 18%,rgba(139,92,246,.23) 0 8%,transparent 28%),radial-gradient(circle at 72% 78%,rgba(59,130,246,.18) 0 7%,transparent 30%),linear-gradient(145deg,var(--primary) 0%,#6556c9 45%,#734ca8 100%);background-attachment:fixed}
+body::before,body::after{content:"";position:fixed;z-index:-1;pointer-events:none;border-radius:999px}
+body::before{width:330px;height:330px;top:-120px;left:-145px;background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+body::after{width:410px;height:410px;right:-230px;bottom:70px;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.08)}
+button,input,textarea{font:inherit;outline:none}button{border:0;cursor:pointer;transition:transform .16s var(--ease),box-shadow .2s var(--ease),filter .16s ease,background .18s ease,color .18s ease}button:active{transform:scale(.975)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{box-shadow:0 0 0 4px rgba(91,111,232,.18)!important}
+.barra-topo{position:fixed;top:0;left:0;right:0;height:78px;display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100vw - 650px)/2 + 18px));background:linear-gradient(180deg,rgba(55,48,130,.48),rgba(74,63,157,.22));border-bottom:1px solid rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(25,22,75,.10);backdrop-filter:blur(18px) saturate(135%);-webkit-backdrop-filter:blur(18px) saturate(135%);z-index:1000}
+.titulo-topo{color:#fff;font-size:18px;font-weight:750;letter-spacing:-.35px;display:flex;align-items:center;gap:9px;text-shadow:0 1px 8px rgba(24,27,66,.14)}
+.brand-mark{width:31px;height:31px;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.18);font-size:17px}
+.botao-menu,.botao-mais{width:44px;height:44px;min-width:44px;border-radius:14px;background:rgba(255,255,255,.95);color:#38405a;border:1px solid rgba(255,255,255,.56);box-shadow:0 6px 16px rgba(24,29,72,.12),inset 0 1px 0 rgba(255,255,255,.70);display:grid;place-items:center;margin:0;padding:0}
+.botao-menu{font-size:20px}.botao-mais{font-size:26px;color:var(--primary)}
+.page{display:none}.page.active{display:block}
+.hero{color:#fff;margin:2px 2px 16px}.hero small{display:block;opacity:.88;font-size:12px;margin-top:4px}.hero h1{font-size:25px;letter-spacing:-.7px}
+.contadores{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 18px}.contador{position:relative;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm);border-radius:17px;padding:15px 8px 13px;background:var(--surface);backdrop-filter:blur(16px);text-align:center;font-size:11px;font-weight:650;color:var(--text2)}.contador::before{content:"";position:absolute;left:14px;right:14px;top:0;height:2px;border-radius:0 0 99px 99px;background:currentColor;opacity:.38}.contador span{display:block;font-size:25px;font-weight:800;letter-spacing:-.8px;margin-bottom:3px}.contador small{font-size:10px;color:var(--text2);letter-spacing:.2px;text-transform:uppercase}.contador.total span{color:var(--primary)}.contador.visible span{color:var(--green)}.contador.status span{color:var(--orange);font-size:18px;margin-top:5px;margin-bottom:5px}.contador.status.admin span{color:var(--green)}
+.card{border:1px solid var(--border);border-radius:24px;padding:21px 18px;margin-bottom:16px;background:var(--surface);box-shadow:var(--shadow-md);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.section-title h2{font-size:19px;font-weight:760;letter-spacing:-.45px}.section-title h3{font-size:17px;font-weight:740}.badge{display:inline-block;font-size:11px;padding:4px 8px;border-radius:20px;background:#e8ebff;color:#4f46c5;font-weight:bold}.badge.green{background:#e8f5ef;color:#087443}.badge.orange{background:#fff4db;color:#a16207}.note{font-size:12px;color:var(--text2);line-height:1.5}.empty{text-align:center;color:var(--text3);padding:34px 12px;font-style:italic}
+.search-row{display:flex;gap:8px}.search-row input{flex:1}.search-row button{width:50px;margin:0;border-radius:14px;background:var(--primary);color:#fff;font-size:20px}
+label{display:block;margin:16px 0 7px;color:#4f596e;font-size:13px;font-weight:680}input,textarea{width:100%;min-height:50px;padding:13px 14px;border:1px solid #e1e5ed;border-radius:14px;background:#f8f9fc;color:var(--text);font-size:15px;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}textarea{min-height:120px;resize:vertical}input:hover,textarea:hover{border-color:#d4d9e5;background:#fff}input:focus,textarea:focus{border-color:rgba(102,116,232,.55);background:#fff;box-shadow:0 0 0 4px rgba(102,116,232,.09)!important}
+.btn,.add-btn{width:100%;min-height:48px;padding:13px 14px;border-radius:14px;font-size:14px;font-weight:740;margin-top:10px}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-strong));color:#fff;box-shadow:0 8px 18px rgba(83,99,220,.20)}.btn-green{background:var(--green);color:#fff}.btn-orange{background:var(--orange);color:#fff}.btn-red{background:var(--red);color:#fff}.btn-purple{background:var(--purple);color:#fff}.btn-neutral{background:#f1f3f7;color:#465066;border:1px solid #e4e7ee}.add-btn{background:var(--primary-soft);color:var(--primary);border:1px solid rgba(102,116,232,.10)}.chip{width:auto;white-space:nowrap;padding:7px 11px;border-radius:999px;background:var(--primary-soft);color:var(--primary);border:1px solid rgba(102,116,232,.08);font-size:11px;font-weight:740}
+.note-list{display:grid;gap:10px}.note-item{display:flex;align-items:flex-start;gap:10px;background:linear-gradient(180deg,#fff,#fbfcfe);border:1px solid #edf0f5;border-radius:16px;padding:13px;transition:transform .15s ease,box-shadow .15s ease}.note-item:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}.note-index{width:34px;height:34px;min-width:34px;border-radius:11px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:12px;font-weight:800}.note-content{flex:1;min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.45;font-size:14px}.note-actions{display:flex;gap:5px;align-items:center}.icon-btn{width:34px;height:34px;min-width:34px;border-radius:11px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center}.icon-btn.del{background:#fff1f2;color:#c83a47;border:1px solid #ffe0e3}.drag-handle{width:34px;height:34px;min-width:34px;border-radius:11px;background:#f1f3f7;color:#667085;display:grid;place-items:center;cursor:grab;touch-action:none}.drag-handle:active{cursor:grabbing}.sortable-ghost{opacity:.45}.sortable-chosen{box-shadow:0 14px 30px rgba(27,33,62,.18)}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick-grid .btn{margin-top:0}.info-row{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid #edf0f5}.info-row:last-child{border-bottom:0}.info-row span{color:var(--text2);font-size:13px}.info-row b{font-size:13px;text-align:right}
+.bottom{position:fixed;left:50%;right:auto;transform:translateX(-50%);bottom:10px;width:min(590px,calc(100% - 18px));height:66px;padding:6px;gap:3px;border-radius:21px;overflow:hidden;background:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.68);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);box-shadow:0 14px 38px rgba(24,29,62,.17),inset 0 1px 0 rgba(255,255,255,.78);display:flex;z-index:1000}.nav{flex:1;position:relative;height:54px;border-radius:15px;background:transparent;color:#858da1;font-size:10px;font-weight:720;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}.nav span{font-size:21px;line-height:1}.nav.active{color:var(--primary);background:rgba(102,116,232,.10)}.nav.active::after{content:"";position:absolute;bottom:3px;width:18px;height:2px;border-radius:99px;background:currentColor;opacity:.72}
+.menu-modal,.modal{display:none;position:fixed;inset:0;background:rgba(13,18,31,.52);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:4000;align-items:center;justify-content:center;padding:15px}.menu-modal.open,.modal.open{display:flex}.menu-box,.modal-box{border:1px solid rgba(255,255,255,.58);box-shadow:var(--shadow-lg);background:rgba(255,255,255,.98)}.menu-box{width:100%;max-width:430px;border-radius:24px;padding:23px 20px;max-height:90vh;overflow:auto}.menu-box h2{font-size:24px;font-weight:760;letter-spacing:-.5px;margin-bottom:18px}.menu-item{width:100%;height:50px;border-radius:13px;color:#fff;font-size:14px;font-weight:740;margin:0 0 9px;padding:0 16px;text-align:left}.menu-profile{background:#5b71d8}.menu-theme{background:#d99023}.menu-color{background:#7660d7}.menu-export{background:#5b71d8}.menu-import{background:#27815c}.menu-close{background:#d94c4c;text-align:center}.menu-item:hover{filter:brightness(1.035);transform:translateY(-1px)}
+.modal-box{width:min(520px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:24px;padding:23px}.modal.open .modal-box{animation:modalIn .22s var(--ease)}@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}.modal-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.modal-title h2{font-size:22px;font-weight:760;letter-spacing:-.55px}.modal-close{width:40px;height:40px;min-width:40px;border-radius:13px;background:#fff1f2;color:#c83a47;border:1px solid #ffe0e3;font-size:22px}.actions{display:flex;gap:10px;margin-top:18px}.actions button{flex:1;margin:0}.password-row{display:flex;gap:8px}.password-row input{flex:1}.password-row button{width:50px;border-radius:14px;background:#f1f3f7;color:#465066;border:1px solid #e4e7ee}.message{font-size:12px;min-height:18px;margin-top:8px}.message.error{color:#c83a47}.message.ok{color:#087443}.hidden{display:none!important}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(25px);background:rgba(28,32,43,.96);color:#fff;padding:11px 15px;border-radius:12px;z-index:9999;opacity:0;visibility:hidden;pointer-events:none;transition:.25s;max-width:88%;text-align:center;box-shadow:0 10px 28px rgba(10,12,20,.25)}.toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.file-label{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:13px 14px;border-radius:14px;background:#27815c;color:#fff;font-size:14px;font-weight:740;cursor:pointer;margin-top:10px}.file-label input{display:none}
+.color-picker-wrap{display:flex;align-items:center;gap:10px;margin-top:10px}.color-picker-wrap input[type=color]{width:58px;min-width:58px;height:48px;padding:4px}.color-picker-wrap span{font-size:12px;color:var(--text2)}
+body.dark{--text:#f4f6fb;--text2:#a1a9bc;--text3:#747e93;--surface:rgba(12,16,25,.95);--surface-solid:#0d1119;--border:rgba(255,255,255,.08);background:radial-gradient(circle at 15% 10%,rgba(99,102,241,.20),transparent 28%),radial-gradient(circle at 85% 80%,rgba(124,58,237,.16),transparent 30%),linear-gradient(145deg,#111426 0%,#17152d 48%,#20142c 100%);background-attachment:fixed}.dark .card,.dark .contador,.dark .modal-box,.dark .menu-box{background:rgba(10,13,20,.95);border-color:rgba(255,255,255,.08);color:var(--text)}.dark label{color:#d4d8e3}.dark input,.dark textarea{background:#151a24;color:#f3f5fa;border-color:#293142}.dark input:hover,.dark textarea:hover,.dark input:focus,.dark textarea:focus{background:#191f2b}.dark .botao-menu,.dark .botao-mais{background:rgba(12,16,25,.92);color:#f2f4fa;border-color:rgba(255,255,255,.09)}.dark .bottom{background:rgba(10,13,20,.94);border-color:rgba(255,255,255,.09)}.dark .nav{color:#98a1b5}.dark .nav.active{color:#8b9cf7;background:rgba(139,156,247,.10)}.dark .note-item{background:linear-gradient(180deg,#121722,#10151e);border-color:#222a39}.dark .note-index,.dark .icon-btn{background:#151b31}.dark .btn-neutral,.dark .drag-handle,.dark .password-row button{background:#151a24;color:#d7dbea;border-color:#283142}.dark .info-row{border-color:#292f3d}.dark .badge{background:#151b31;color:#aab5ff}.dark .badge.green{background:#0d281e;color:#7ad7af}.dark .badge.orange{background:#2c2110;color:#f4c16e}.dark .color-picker-wrap span{color:#a1a9bc}
+@media(max-width:500px){body{padding:96px 13px 92px}.barra-topo{height:76px;padding:0 15px}.titulo-topo{font-size:17px}.brand-mark{width:29px;height:29px}.contadores{gap:8px}.contador{padding:13px 5px 12px;border-radius:15px}.contador span{font-size:22px}.card{padding:18px 15px;border-radius:20px;margin-bottom:14px}.modal{align-items:center!important;padding:14px!important}.modal-box{width:100%!important;max-height:calc(100vh - 28px)!important;border-radius:22px!important;padding:20px 17px}.menu-box{padding:20px 17px;border-radius:22px}.bottom{bottom:8px;width:calc(100% - 14px);height:64px;border-radius:18px}.nav{height:52px;font-size:9px}.nav span{font-size:20px}.note-item{padding:11px}.note-actions{gap:4px}.icon-btn,.drag-handle{width:32px;height:32px;min-width:32px}.quick-grid{gap:7px}}
+@media(max-width:345px){body{padding-left:10px;padding-right:10px}.titulo-topo span:last-child{font-size:15px}.contadores{gap:6px}.contador span{font-size:19px}.contador small{font-size:8px}.nav{font-size:8px}.nav span{font-size:19px}.note-index{display:none}}
 </style>
 </head>
-
 <body>
+<header class="barra-topo">
+  <button class="botao-menu" id="menuBtn" aria-label="Abrir menu">☰</button>
+  <div class="titulo-topo"><span class="brand-mark">📝</span><span>Minhas Anotações</span></div>
+  <button class="botao-mais" id="plusBtn" aria-label="Nova anotação">+</button>
+</header>
 
-<!-- Botão discreto -->
-<button id="btnSeguranca" onclick="mostrarSeguranca()">⚙</button>
+<main id="notesPage" class="page active">
+  <div class="hero"><h1>Suas anotações</h1><small>Salvas somente neste aparelho.</small></div>
 
-<h2>Lista de informações</h2>
+  <section class="contadores">
+    <div class="contador total"><span id="totalCount">0</span><small>Total</small></div>
+    <div class="contador visible"><span id="visibleCount">0</span><small>Visíveis</small></div>
+    <div class="contador status" id="statusCard"><span id="statusText">Protegido</span><small>Modo</small></div>
+  </section>
 
-<input type="text" id="nome" placeholder="Digite algo">
-<button onclick="salvar()">Salvar</button>
+  <section class="card">
+    <div class="section-title"><h2>🔎 Encontrar anotação</h2><button class="chip" id="clearSearchBtn">Limpar</button></div>
+    <div class="search-row"><input id="searchInput" type="search" placeholder="Pesquisar nas anotações..."><button id="searchBtn" aria-label="Pesquisar">⌕</button></div>
+    <p class="note" id="searchHint" style="margin-top:9px">Digite uma palavra ou trecho para filtrar sua lista.</p>
+  </section>
 
-<ul id="lista"></ul>
+  <section class="card">
+    <div class="section-title"><h2>🗒️ Lista</h2><span class="badge" id="listBadge">0 itens</span></div>
+    <div id="lista" class="note-list"></div>
+    <button class="add-btn" id="addInsideBtn">+ Nova anotação</button>
+  </section>
+</main>
 
-<!-- Área de segurança -->
-<div id="areaSenha">
-  <h4>Digite a senha correta para conseguir excluir ou reorganizar as anotações</h4>
-  <input type="password" id="senha" placeholder="Digite a senha">
-  <button type="button" onclick="verificar()">Confirmar</button>
-  <button type="button" onclick="mostrarSenha()">mostrar senha</button>
-  <p id="mensagem"></p>
-  <h4>Exportar anotações</h4>
-  <button onclick="exportar()">Exportar lista</button>  
-  <h4>Importar lista via arquivo</h4>
-  <input type="file" id="importFile" onchange="importarArquivo(event)">
-</div>
+<main id="backupPage" class="page">
+  <div class="hero"><h1>Backup</h1><small>Guarde uma cópia das suas anotações.</small></div>
+  <section class="card">
+    <div class="section-title"><h2>💾 Seus dados</h2><span class="badge green">JSON</span></div>
+    <p class="note">O backup pode ser importado novamente neste app. Seus dados continuam salvos localmente no navegador.</p>
+    <button class="btn btn-primary" id="exportBtn">📥 Exportar anotações</button>
+    <label class="file-label">📤 Importar arquivo JSON<input type="file" id="importFile" accept=".json,application/json"></label>
+  </section>
+  <section class="card">
+    <div class="section-title"><h2>ℹ️ Armazenamento</h2></div>
+    <div class="info-row"><span>Quantidade de anotações</span><b id="backupCount">0</b></div>
+    <div class="info-row"><span>Local de armazenamento</span><b>Este dispositivo</b></div>
+    <div class="info-row"><span>Formato do backup</span><b>.json</b></div>
+  </section>
+</main>
 
-<!-- SortableJS CDN -->
+<main id="settingsPage" class="page">
+  <div class="hero"><h1>Ajustes</h1><small>Personalize e gerencie o acesso.</small></div>
+  <section class="card">
+    <div class="section-title"><h2>🔐 Segurança</h2><span class="badge orange" id="securityBadge">Bloqueado</span></div>
+    <p class="note">A senha libera exclusão e reorganização das anotações. Ao sair do modo de edição, a lista volta a ficar protegida.</p>
+    <button class="btn btn-primary" id="securityBtn">🔓 Desbloquear edição</button>
+    <button class="btn btn-neutral hidden" id="lockBtn">🔒 Bloquear novamente</button>
+  </section>
+  <section class="card">
+    <div class="section-title"><h2>🎨 Aparência</h2></div>
+    <button class="btn btn-orange" id="themeBtn">🌙 / ☀️ Tema claro/escuro</button>
+    <label>Cor principal</label>
+    <div class="color-picker-wrap"><input id="primaryColor" type="color" value="#667eea"><span>A cor é salva automaticamente neste dispositivo.</span></div>
+    <button class="btn btn-neutral" id="resetColorBtn">Restaurar cor padrão</button>
+  </section>
+</main>
+
+<nav class="bottom">
+  <button class="nav active" data-page="notesPage"><span>📝</span>Anotações</button>
+  <button class="nav" id="navAdd"><span>➕</span>Adicionar</button>
+  <button class="nav" data-page="backupPage"><span>💾</span>Backup</button>
+  <button class="nav" data-page="settingsPage"><span>⚙️</span>Ajustes</button>
+</nav>
+
+<div class="menu-modal" id="menuModal"><div class="menu-box">
+  <h2>Menu</h2>
+  <button class="menu-item menu-profile" id="menuNotes">📝 Minhas anotações</button>
+  <button class="menu-item menu-profile" id="menuSecurity">🔐 Segurança e edição</button>
+  <button class="menu-item menu-theme" id="menuTheme">🌙 / ☀️ Tema claro/escuro</button>
+  <button class="menu-item menu-color" id="menuColor">🎨 Escolher cor de fundo</button>
+  <button class="menu-item menu-export" id="menuExport">📥 Exportar backup</button>
+  <button class="menu-item menu-import" id="menuImport">📤 Importar backup</button>
+  <button class="menu-item menu-close" id="menuClose">Fechar</button>
+</div></div>
+
+<div class="modal" id="addModal"><div class="modal-box">
+  <div class="modal-title"><h2>➕ Nova anotação</h2><button class="modal-close" data-close="addModal">×</button></div>
+  <label>Anotação</label>
+  <textarea id="noteInput" placeholder="Digite sua anotação..."></textarea>
+  <p class="note" style="margin-top:7px">Você pode usar várias linhas. O conteúdo fica salvo neste aparelho.</p>
+  <div class="actions"><button class="btn-neutral" data-close="addModal">Cancelar</button><button class="btn-primary" id="saveBtn">Salvar</button></div>
+</div></div>
+
+<div class="modal" id="securityModal"><div class="modal-box">
+  <div class="modal-title"><h2>🔐 Liberar edição</h2><button class="modal-close" data-close="securityModal">×</button></div>
+  <p class="note">Digite a senha correta para excluir ou reorganizar as anotações.</p>
+  <label>Senha</label>
+  <div class="password-row"><input type="password" id="senha" placeholder="Digite a senha"><button id="showPasswordBtn" type="button" aria-label="Mostrar senha">👁</button></div>
+  <div class="message" id="mensagem"></div>
+  <button class="btn btn-primary" id="confirmPasswordBtn">Confirmar</button>
+</div></div>
+
+<div class="modal" id="colorModal"><div class="modal-box">
+  <div class="modal-title"><h2>🎨 Cor do app</h2><button class="modal-close" data-close="colorModal">×</button></div>
+  <p class="note">Escolha a cor principal. O degradê e os detalhes do app acompanham a nova cor.</p>
+  <label>Cor principal</label>
+  <input id="modalPrimaryColor" type="color" value="#667eea" style="height:64px;padding:7px">
+  <div class="actions"><button class="btn-neutral" id="modalResetColor">Padrão</button><button class="btn-primary" id="applyColorBtn">Aplicar</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
 <script>
-let dados = JSON.parse(localStorage.getItem("banco")) || [];
-let admin = false;
+const STORAGE_KEY="banco";
+const THEME_KEY="anotacoesTema";
+const COLOR_KEY="anotacoesCor";
+let dados=[];
+let admin=false;
+let sortable=null;
+let toastTimer=null;
 
-// Inicializa SortableJS
-let listaUl = document.getElementById("lista");
-let sortable = new Sortable(listaUl, {
-  handle: ".drag-handle",
-  animation: 150,
-  disabled: true, // só ativa se admin = true
-  onEnd: function (evt) {
-    let item = dados.splice(evt.oldIndex, 1)[0];
-    dados.splice(evt.newIndex, 0, item);
-    localStorage.setItem("banco", JSON.stringify(dados));
-    mostrar();
+function carregarDados(){
+  try{
+    const salvo=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    dados=Array.isArray(salvo)?salvo.map(x=>typeof x==="string"?x:String(x??"")):[];
+  }catch{dados=[]}
+}
+
+function persistir(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(dados));
+}
+
+function esc(texto){
+  return String(texto).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+}
+
+function showToast(texto){
+  const el=document.getElementById("toast");
+  el.textContent=texto;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove("show"),2300);
+}
+
+function abrirModal(id){document.getElementById(id)?.classList.add("open")}
+function fecharModal(id){document.getElementById(id)?.classList.remove("open")}
+
+function switchPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+  document.querySelectorAll(".nav[data-page]").forEach(n=>n.classList.toggle("active",n.dataset.page===id));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function termoBusca(){return document.getElementById("searchInput").value.trim().toLocaleLowerCase("pt-BR")}
+
+function indicesVisiveis(){
+  const termo=termoBusca();
+  return dados.map((item,index)=>({item,index})).filter(x=>!termo||x.item.toLocaleLowerCase("pt-BR").includes(termo));
+}
+
+function atualizarContadores(visible){
+  document.getElementById("totalCount").textContent=dados.length;
+  document.getElementById("visibleCount").textContent=visible.length;
+  document.getElementById("backupCount").textContent=dados.length;
+  document.getElementById("listBadge").textContent=`${visible.length} ${visible.length===1?"item":"itens"}`;
+  document.getElementById("statusText").textContent=admin?"Edição":"Protegido";
+  document.getElementById("statusCard").classList.toggle("admin",admin);
+  document.getElementById("securityBadge").textContent=admin?"Liberado":"Bloqueado";
+  document.getElementById("securityBadge").classList.toggle("green",admin);
+  document.getElementById("securityBadge").classList.toggle("orange",!admin);
+  document.getElementById("securityBtn").classList.toggle("hidden",admin);
+  document.getElementById("lockBtn").classList.toggle("hidden",!admin);
+}
+
+function mostrar(){
+  const lista=document.getElementById("lista");
+  const visible=indicesVisiveis();
+  lista.innerHTML="";
+
+  if(!visible.length){
+    lista.innerHTML=`<div class="empty">${dados.length?"Nenhuma anotação encontrada.":"Você ainda não tem anotações. Toque em + para criar a primeira."}</div>`;
+  }else{
+    visible.forEach(({item,index},pos)=>{
+      const row=document.createElement("div");
+      row.className="note-item";
+      row.dataset.index=index;
+      const drag=admin&&!termoBusca()?`<button class="drag-handle" type="button" aria-label="Arrastar">☰</button>`:"";
+      const excluir=admin?`<button class="icon-btn del" type="button" data-delete="${index}" aria-label="Excluir">🗑</button>`:"";
+      row.innerHTML=`${drag}<div class="note-index">${pos+1}</div><div class="note-content">${esc(item)}</div><div class="note-actions"><button class="icon-btn" type="button" data-copy="${index}" aria-label="Copiar">⧉</button>${excluir}</div>`;
+      lista.appendChild(row);
+    });
   }
-});
 
-function salvar() {
-  let nome = document.getElementById("nome").value;
-  if (nome !== "") {
-    dados.push(nome);
-    localStorage.setItem("banco", JSON.stringify(dados));
-    document.getElementById("nome").value = "";
-    mostrar();
+  atualizarContadores(visible);
+  atualizarSortable();
+}
+
+function salvar(){
+  const input=document.getElementById("noteInput");
+  const texto=input.value.trim();
+  if(!texto){showToast("Digite uma anotação antes de salvar.");input.focus();return}
+  dados.push(texto);
+  persistir();
+  input.value="";
+  fecharModal("addModal");
+  document.getElementById("searchInput").value="";
+  switchPage("notesPage");
+  mostrar();
+  showToast("Anotação salva.");
+}
+
+function excluir(index){
+  if(!admin)return;
+  if(!confirm("Excluir esta anotação?"))return;
+  dados.splice(index,1);
+  persistir();
+  mostrar();
+  showToast("Anotação excluída.");
+}
+
+async function copiar(index){
+  try{await navigator.clipboard.writeText(dados[index]);showToast("Anotação copiada.")}
+  catch{
+    const ta=document.createElement("textarea");ta.value=dados[index];document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();showToast("Anotação copiada.")
   }
 }
 
-function mostrar() {
-  listaUl.innerHTML = "";
-
-  dados.forEach(function(item, index) {
-    let li = document.createElement("li");
-
-    if (admin === true) {
-      // Pauzinhos para arrastar
-      let handle = document.createElement("span");
-      handle.textContent = "☰";
-      handle.className = "drag-handle";
-      li.appendChild(handle);
-
-      // Texto
-      li.appendChild(document.createTextNode(item));
-
-      // Botão excluir
-      let botao = document.createElement("button");
-      botao.textContent = "Excluir";
-      botao.onclick = function() {
-        dados.splice(index, 1);
-        localStorage.setItem("banco", JSON.stringify(dados));
-        mostrar();
-      };
-      li.appendChild(botao);
-
-    } else {
-      li.textContent = item;
+function atualizarSortable(){
+  if(sortable){sortable.destroy();sortable=null}
+  if(!admin||termoBusca()||typeof Sortable==="undefined")return;
+  sortable=new Sortable(document.getElementById("lista"),{
+    handle:".drag-handle",
+    animation:170,
+    ghostClass:"sortable-ghost",
+    chosenClass:"sortable-chosen",
+    onEnd(evt){
+      if(evt.oldIndex===evt.newIndex)return;
+      const item=dados.splice(evt.oldIndex,1)[0];
+      dados.splice(evt.newIndex,0,item);
+      persistir();
+      mostrar();
+      showToast("Ordem atualizada.");
     }
-
-    listaUl.appendChild(li);
   });
-
-  sortable.option("disabled", !admin);
 }
 
-function mostrarSeguranca() {
-  let area = document.getElementById("areaSenha");
-
-  if (area.style.display === "none" || area.style.display === "") {
-    area.style.display = "block";
-  } else {
-    area.style.display = "none";
-    admin = false;
+function verificar(){
+  const senhaDigitada=document.getElementById("senha").value;
+  const mensagem=document.getElementById("mensagem");
+  const senhaCorreta=atob("SGVucmlxdWUyMTIxMDZf");
+  if(senhaDigitada===senhaCorreta){
+    admin=true;
+    mensagem.className="message ok";
+    mensagem.textContent="Edição liberada.";
+    setTimeout(()=>{
+      fecharModal("securityModal");
+      document.getElementById("senha").value="";
+      mensagem.textContent="";
+      mostrar();
+      showToast("Modo de edição liberado.");
+    },350);
+  }else{
+    admin=false;
+    mensagem.className="message error";
+    mensagem.textContent="Senha incorreta.";
     mostrar();
-    document.getElementById("senha").value = "";
-    document.getElementById("mensagem").textContent = "";
-    document.getElementById("importText").value = "";
-    document.getElementById("importFile").value = "";
   }
 }
 
-function verificar() {
-  let senhaDigitada = document.getElementById("senha").value;
-
-  const senhaCorreta = atob("SGVucmlxdWUyMTIxMDZf");
-
-if (senhaDigitada === senhaCorreta) {
-    admin = true;
-    document.getElementById("mensagem").textContent = "";
-    mostrar();
-  } else {
-    document.getElementById("mensagem").textContent = "Senha incorreta";
-  }
+function bloquear(){
+  admin=false;
+  document.getElementById("senha").value="";
+  document.getElementById("mensagem").textContent="";
+  mostrar();
+  showToast("Edição bloqueada.");
 }
 
-function mostrarSenha() {
-  let campo = document.getElementById("senha");
-  if (campo.type === "password") {
-    campo.type = "text";
-  } else {
-    campo.type = "password";
-  }
-}
-
-// Exportar lista
-function exportar() {
-  const dataStr = JSON.stringify(dados, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-
-  if (window.exportUrl) {
-    URL.revokeObjectURL(window.exportUrl);
-  }
-
-  window.exportUrl = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = window.exportUrl;
-  a.download = "meu_banco.json";
+function exportar(){
+  const blob=new Blob([JSON.stringify(dados,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="minhas-anotacoes-backup.json";
   document.body.appendChild(a);
   a.click();
-  document.body.removeChild(a);
-
-  setTimeout(() => {
-    URL.revokeObjectURL(window.exportUrl);
-  }, 1000);
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast("Backup exportado.");
 }
 
-// Importar lista manualmente
-function importarManual() {
-  let texto = document.getElementById("importText").value;
-  try {
-    let importDados = JSON.parse(texto);
-    if (Array.isArray(importDados)) {
-      dados = importDados;
-      localStorage.setItem("banco", JSON.stringify(dados));
+function importarArquivo(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const obj=JSON.parse(reader.result);
+      const lista=Array.isArray(obj)?obj:(Array.isArray(obj?.dados)?obj.dados:null);
+      if(!lista)throw new Error("Formato inválido");
+      const importados=lista.map(x=>typeof x==="string"?x:String(x??"")).filter(Boolean);
+      if(!confirm(`Importar ${importados.length} anotações? Isso substituirá a lista atual.`))return;
+      dados=importados;
+      persistir();
+      document.getElementById("searchInput").value="";
       mostrar();
-      document.getElementById("importText").value = "";
-      alert("Importação manual concluída!");
-    } else {
-      alert("O código inserido não é uma lista válida.");
-    }
-  } catch (e) {
-    alert("Erro ao ler o código. Certifique-se de colar o JSON corretamente.");
-  }
-}
-
-// Importar lista via arquivo
-function importarArquivo(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      let importDados = JSON.parse(e.target.result);
-      if (Array.isArray(importDados)) {
-        dados = importDados;
-        localStorage.setItem("banco", JSON.stringify(dados));
-        mostrar();
-        alert("Importação via arquivo concluída!");
-      } else {
-        alert("O arquivo selecionado não contém uma lista válida.");
-      }
-    } catch (err) {
-      alert("Erro ao ler o arquivo. Certifique-se de que é JSON válido.");
-    }
-    document.getElementById("importFile").value = ""; // limpa input
+      switchPage("notesPage");
+      showToast("Backup importado.");
+    }catch{showToast("Arquivo JSON inválido.")}
+    document.getElementById("importFile").value="";
   };
   reader.readAsText(file);
 }
 
-mostrar();
-</script>
+function aplicarTema(){
+  document.body.classList.toggle("dark",localStorage.getItem(THEME_KEY)==="dark");
+}
 
+function alternarTema(){
+  const dark=!document.body.classList.contains("dark");
+  localStorage.setItem(THEME_KEY,dark?"dark":"light");
+  aplicarTema();
+}
+
+function hexToRgb(hex){
+  const h=hex.replace("#","");
+  if(h.length!==6)return null;
+  return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};
+}
+
+function shiftHex(hex,amount){
+  const rgb=hexToRgb(hex);if(!rgb)return hex;
+  const clamp=n=>Math.max(0,Math.min(255,n));
+  return "#"+[rgb.r,rgb.g,rgb.b].map(v=>clamp(v+amount).toString(16).padStart(2,"0")).join("");
+}
+
+function aplicarCor(hex){
+  if(!/^#[0-9a-f]{6}$/i.test(hex))hex="#667eea";
+  document.documentElement.style.setProperty("--primary",hex);
+  document.documentElement.style.setProperty("--primary-strong",shiftHex(hex,-20));
+  const rgb=hexToRgb(hex);
+  if(rgb)document.documentElement.style.setProperty("--primary-soft",`rgba(${rgb.r},${rgb.g},${rgb.b},.11)`);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content",hex);
+  document.getElementById("primaryColor").value=hex;
+  document.getElementById("modalPrimaryColor").value=hex;
+  localStorage.setItem(COLOR_KEY,hex);
+}
+
+function carregarAparencia(){
+  aplicarTema();
+  aplicarCor(localStorage.getItem(COLOR_KEY)||"#667eea");
+}
+
+document.getElementById("menuBtn").onclick=()=>document.getElementById("menuModal").classList.add("open");
+document.getElementById("menuClose").onclick=()=>document.getElementById("menuModal").classList.remove("open");
+document.getElementById("menuModal").addEventListener("click",e=>{if(e.target.id==="menuModal")e.currentTarget.classList.remove("open")});
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>fecharModal(b.dataset.close));
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)fecharModal(m.id)}));
+document.querySelectorAll(".nav[data-page]").forEach(n=>n.onclick=()=>switchPage(n.dataset.page));
+document.getElementById("navAdd").onclick=()=>{abrirModal("addModal");setTimeout(()=>document.getElementById("noteInput").focus(),150)};
+document.getElementById("plusBtn").onclick=()=>{abrirModal("addModal");setTimeout(()=>document.getElementById("noteInput").focus(),150)};
+document.getElementById("addInsideBtn").onclick=()=>document.getElementById("plusBtn").click();
+document.getElementById("saveBtn").onclick=salvar;
+document.getElementById("noteInput").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")salvar()});
+document.getElementById("searchInput").addEventListener("input",mostrar);
+document.getElementById("searchBtn").onclick=mostrar;
+document.getElementById("clearSearchBtn").onclick=()=>{document.getElementById("searchInput").value="";mostrar();document.getElementById("searchInput").focus()};
+document.getElementById("lista").addEventListener("click",e=>{const del=e.target.closest("[data-delete]");const copy=e.target.closest("[data-copy]");if(del)excluir(Number(del.dataset.delete));if(copy)copiar(Number(copy.dataset.copy))});
+document.getElementById("securityBtn").onclick=()=>{abrirModal("securityModal");setTimeout(()=>document.getElementById("senha").focus(),120)};
+document.getElementById("lockBtn").onclick=bloquear;
+document.getElementById("confirmPasswordBtn").onclick=verificar;
+document.getElementById("senha").addEventListener("keydown",e=>{if(e.key==="Enter")verificar()});
+document.getElementById("showPasswordBtn").onclick=()=>{const i=document.getElementById("senha");i.type=i.type==="password"?"text":"password"};
+document.getElementById("exportBtn").onclick=exportar;
+document.getElementById("importFile").onchange=e=>importarArquivo(e.target.files[0]);
+document.getElementById("themeBtn").onclick=alternarTema;
+document.getElementById("primaryColor").oninput=e=>aplicarCor(e.target.value);
+document.getElementById("resetColorBtn").onclick=()=>aplicarCor("#667eea");
+document.getElementById("applyColorBtn").onclick=()=>{aplicarCor(document.getElementById("modalPrimaryColor").value);fecharModal("colorModal");showToast("Cor atualizada.")};
+document.getElementById("modalResetColor").onclick=()=>{document.getElementById("modalPrimaryColor").value="#667eea"};
+document.getElementById("menuNotes").onclick=()=>{document.getElementById("menuModal").classList.remove("open");switchPage("notesPage")};
+document.getElementById("menuSecurity").onclick=()=>{document.getElementById("menuModal").classList.remove("open");switchPage("settingsPage");if(!admin)setTimeout(()=>document.getElementById("securityBtn").scrollIntoView({behavior:"smooth",block:"center"}),100)};
+document.getElementById("menuTheme").onclick=()=>{alternarTema();document.getElementById("menuModal").classList.remove("open")};
+document.getElementById("menuColor").onclick=()=>{document.getElementById("menuModal").classList.remove("open");document.getElementById("modalPrimaryColor").value=localStorage.getItem(COLOR_KEY)||"#667eea";abrirModal("colorModal")};
+document.getElementById("menuExport").onclick=()=>{exportar();document.getElementById("menuModal").classList.remove("open")};
+document.getElementById("menuImport").onclick=()=>{document.getElementById("menuModal").classList.remove("open");switchPage("backupPage");setTimeout(()=>document.getElementById("importFile").click(),100)};
+
+carregarDados();
+carregarAparencia();
+mostrar();
+
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
+</script>
 </body>
 </html>
