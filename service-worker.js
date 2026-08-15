@@ -1,80 +1,66 @@
-const VERSION = 'minha-lista-v2';
-const SHELL = `${VERSION}-shell`;
-const MEDIA = `${VERSION}-media`;
-const APP_SHELL = ['./', './index.html', './manifest.json', './icone.png'];
+const CACHE_NAME="minhas-anotacoes-v3";
+const APP_SHELL=["./","./index.html","./manifest.json","./icone.png"];
+const OPTIONAL=["https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(SHELL)
-      .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
-  );
+self.addEventListener("install",event=>{
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE_NAME);
+    await cache.addAll(APP_SHELL);
+    await Promise.allSettled(OPTIONAL.map(url=>cache.add(url)));
+    await self.skipWaiting();
+  })());
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil((async () => {
-    const keep = new Set([SHELL, MEDIA]);
-    const names = await caches.keys();
-    await Promise.all(names.filter(name => !keep.has(name)).map(name => caches.delete(name)));
+self.addEventListener("activate",event=>{
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)));
     await self.clients.claim();
   })());
 });
 
-self.addEventListener('message', event => {
-  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+self.addEventListener("message",event=>{
+  if(event.data&&event.data.type==="SKIP_WAITING")self.skipWaiting();
 });
 
-async function navigationResponse(request) {
-  try {
-    const fresh = await fetch(request);
-    if (fresh && fresh.ok) {
-      const cache = await caches.open(SHELL);
-      cache.put('./index.html', fresh.clone());
-    }
-    return fresh;
-  } catch {
-    return (await caches.match(request)) || (await caches.match('./index.html')) || (await caches.match('./'));
-  }
-}
-
-async function sameOriginAsset(request) {
-  const cached = await caches.match(request);
-  if (cached) return cached;
-  const response = await fetch(request);
-  if (response && response.ok) {
-    const cache = await caches.open(SHELL);
-    cache.put(request, response.clone());
-  }
-  return response;
-}
-
-async function tmdbImage(request) {
-  const cache = await caches.open(MEDIA);
-  const cached = await cache.match(request);
-  const refresh = fetch(request).then(response => {
-    if (response && (response.ok || response.type === 'opaque')) cache.put(request, response.clone());
+async function networkFirst(request,fallback){
+  const cache=await caches.open(CACHE_NAME);
+  try{
+    const response=await fetch(request);
+    if(response&&response.ok)cache.put(request,response.clone());
     return response;
-  }).catch(() => null);
-  return cached || (await refresh) || Response.error();
+  }catch{
+    return (await cache.match(request))||(fallback?await cache.match(fallback):undefined)||Response.error();
+  }
 }
 
-self.addEventListener('fetch', event => {
-  const request = event.request;
-  if (request.method !== 'GET') return;
+async function staleWhileRevalidate(request){
+  const cache=await caches.open(CACHE_NAME);
+  const cached=await cache.match(request);
+  const fresh=fetch(request).then(response=>{
+    if(response&&(response.ok||response.type==="opaque"))cache.put(request,response.clone());
+    return response;
+  }).catch(()=>null);
+  return cached||(await fresh)||Response.error();
+}
 
-  const url = new URL(request.url);
+self.addEventListener("fetch",event=>{
+  const request=event.request;
+  if(request.method!=="GET")return;
+  const url=new URL(request.url);
 
-  if (request.mode === 'navigate') {
-    event.respondWith(navigationResponse(request));
+  if(request.mode==="navigate"){
+    event.respondWith(networkFirst(request,"./index.html"));
     return;
   }
 
-  if (url.origin === self.location.origin) {
-    event.respondWith(sameOriginAsset(request));
+  if(url.origin===self.location.origin){
+    if(url.pathname.endsWith("manifest.json")){event.respondWith(networkFirst(request));return}
+    event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
-  if (url.hostname === 'image.tmdb.org') {
-    event.respondWith(tmdbImage(request));
+  if(url.hostname==="cdn.jsdelivr.net"){
+    event.respondWith(staleWhileRevalidate(request));
   }
 });
