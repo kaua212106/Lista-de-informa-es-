@@ -1,20 +1,30 @@
 {
-  "name": "Minha Biblioteca",
-  "short_name": "Biblioteca",
-  "description": "Biblioteca pessoal completa com livros, mangás, PDFs, cursos, leitor, progresso e backup.",
-  "start_url": "./",
+  "name": "Minhas Anotações",
+  "short_name": "Anotações",
+  "description": "Anotações pessoais com busca, backup, proteção de edição e funcionamento offline.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#667eea",
   "theme_color": "#667eea",
-  "lang": "pt-BR",
-  "orientation": "portrait",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
   "icons": [
     {
-      "src": "icone.png",
+      "src": "./icone.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "./icone.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
