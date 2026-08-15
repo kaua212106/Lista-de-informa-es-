@@ -47,9 +47,6 @@ label{display:block;margin:16px 0 7px;color:#4f596e;font-size:13px;font-weight:6
 body.dark{--text:#f4f6fb;--text2:#a1a9bc;--text3:#747e93;--surface:rgba(12,16,25,.95);--surface-solid:#0d1119;--border:rgba(255,255,255,.08);background:radial-gradient(circle at 15% 10%,rgba(99,102,241,.20),transparent 28%),radial-gradient(circle at 85% 80%,rgba(124,58,237,.16),transparent 30%),linear-gradient(145deg,#111426 0%,#17152d 48%,#20142c 100%);background-attachment:fixed}.dark .card,.dark .contador,.dark .modal-box,.dark .menu-box{background:rgba(10,13,20,.95);border-color:rgba(255,255,255,.08);color:var(--text)}.dark label{color:#d4d8e3}.dark input,.dark textarea{background:#151a24;color:#f3f5fa;border-color:#293142}.dark input:hover,.dark textarea:hover,.dark input:focus,.dark textarea:focus{background:#191f2b}.dark .botao-menu,.dark .botao-mais{background:rgba(12,16,25,.92);color:#f2f4fa;border-color:rgba(255,255,255,.09)}.dark .bottom{background:rgba(10,13,20,.94);border-color:rgba(255,255,255,.09)}.dark .nav{color:#98a1b5}.dark .nav.active{color:#8b9cf7;background:rgba(139,156,247,.10)}.dark .note-item{background:linear-gradient(180deg,#121722,#10151e);border-color:#222a39}.dark .note-index,.dark .icon-btn{background:#151b31}.dark .btn-neutral,.dark .drag-handle,.dark .password-row button{background:#151a24;color:#d7dbea;border-color:#283142}.dark .info-row{border-color:#292f3d}.dark .badge{background:#151b31;color:#aab5ff}.dark .badge.green{background:#0d281e;color:#7ad7af}.dark .badge.orange{background:#2c2110;color:#f4c16e}.dark .color-picker-wrap span{color:#a1a9bc}
 @media(max-width:500px){body{padding:96px 13px 92px}.barra-topo{height:76px;padding:0 15px}.titulo-topo{font-size:17px}.brand-mark{width:29px;height:29px}.contadores{gap:8px}.contador{padding:13px 5px 12px;border-radius:15px}.contador span{font-size:22px}.card{padding:18px 15px;border-radius:20px;margin-bottom:14px}.modal{align-items:center!important;padding:14px!important}.modal-box{width:100%!important;max-height:calc(100vh - 28px)!important;border-radius:22px!important;padding:20px 17px}.menu-box{padding:20px 17px;border-radius:22px}.bottom{bottom:8px;width:calc(100% - 14px);height:64px;border-radius:18px}.nav{height:52px;font-size:9px}.nav span{font-size:20px}.note-item{padding:11px}.note-actions{gap:4px}.icon-btn,.drag-handle{width:32px;height:32px;min-width:32px}.quick-grid{gap:7px}}
 @media(max-width:345px){body{padding-left:10px;padding-right:10px}.titulo-topo span:last-child{font-size:15px}.contadores{gap:6px}.contador span{font-size:19px}.contador small{font-size:8px}.nav{font-size:8px}.nav span{font-size:19px}.note-index{display:none}}
-
-/* ===== MENU NO PADRÃO DO APP AGENDA ===== */
-.menu-modal{display:none;position:fixed;inset:0;background:rgba(14,20,38,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);z-index:4000;align-items:center;justify-content:center;padding:15px}.menu-modal.open{display:flex}.menu-box{width:100%;max-width:430px;max-height:90vh;overflow:auto;background:rgba(255,255,255,.98);border:1px solid rgba(255,255,255,.7);border-radius:24px;padding:23px 20px;box-shadow:0 24px 70px rgba(18,25,48,.24);animation:menuIn .22s cubic-bezier(.2,.8,.2,1)}@keyframes menuIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}.menu-box h2{font-size:24px;font-weight:760;letter-spacing:-.5px;color:var(--text);margin:0 0 18px}.menu-search{width:100%;min-height:52px;height:auto;padding:13px 14px;border:1px solid #dfe4ef;border-radius:13px;background:#f7f8fb;color:#222b3e;font-size:15px;margin:0 0 14px;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease}.menu-search::placeholder{color:#777}.menu-search:hover{background:#fff;border-color:#cbd3e4}.menu-search:focus{background:#fff;border-color:var(--primary);box-shadow:0 0 0 4px rgba(102,116,232,.12)!important}.menu-item{width:100%;min-height:50px;height:auto;border:0;border-radius:14px;color:#fff;font-size:14px;font-weight:740;letter-spacing:.05px;margin:0 0 9px;padding:0 16px;display:flex;align-items:center;justify-content:flex-start;text-align:left;box-shadow:none}.menu-item:hover{filter:brightness(1.03);transform:translateY(-1px)}.menu-notes{background:#5b71d8}.menu-security{background:#637de2}.menu-theme{background:#d99023}.menu-color{background:#7660d7}.menu-export{background:#5b71d8}.menu-import{background:#27815c}.menu-close{background:#d94c4c;justify-content:center;text-align:center;margin-bottom:0}.dark .menu-box{background:#0d1119;border-color:rgba(255,255,255,.09);color:#f4f6fb}.dark .menu-box h2{color:#f4f6fb}.dark .menu-search{background:#171d29;border-color:#2a3241;color:#eef1f7}.dark .menu-search::placeholder{color:#8790a4}.dark .menu-search:focus{background:#1a202c;border-color:#6979e8;box-shadow:0 0 0 4px rgba(105,121,232,.12)!important}@media(max-width:500px){.menu-modal{padding:15px}.menu-box{width:100%;padding:20px 17px;border-radius:22px}.menu-box h2{font-size:24px;margin-bottom:18px}.menu-search{min-height:52px;font-size:15px;margin-bottom:14px}.menu-item{min-height:50px;font-size:14px;margin-bottom:9px;border-radius:14px}}
 </style>
 </head>
 <body>
@@ -131,13 +128,12 @@ body.dark{--text:#f4f6fb;--text2:#a1a9bc;--text3:#747e93;--surface:rgba(12,16,25
 
 <div class="menu-modal" id="menuModal"><div class="menu-box">
   <h2>Menu</h2>
-  <input type="search" class="menu-search" id="menuSearch" placeholder="Buscar anotação..." autocomplete="off">
-  <button class="menu-item menu-notes" id="menuNotes">📝 &nbsp; Minhas anotações</button>
-  <button class="menu-item menu-security" id="menuSecurity">🔐 &nbsp; Segurança e edição</button>
-  <button class="menu-item menu-theme" id="menuTheme">🌙 / ☀️ &nbsp; Tema Claro/Escuro</button>
-  <button class="menu-item menu-color" id="menuColor">🎨 &nbsp; Escolher Cor de Fundo</button>
-  <button class="menu-item menu-export" id="menuExport">📥 &nbsp; Exportar</button>
-  <button class="menu-item menu-import" id="menuImport">📤 &nbsp; Importar</button>
+  <button class="menu-item menu-profile" id="menuNotes">📝 Minhas anotações</button>
+  <button class="menu-item menu-profile" id="menuSecurity">🔐 Segurança e edição</button>
+  <button class="menu-item menu-theme" id="menuTheme">🌙 / ☀️ Tema claro/escuro</button>
+  <button class="menu-item menu-color" id="menuColor">🎨 Escolher cor de fundo</button>
+  <button class="menu-item menu-export" id="menuExport">📥 Exportar backup</button>
+  <button class="menu-item menu-import" id="menuImport">📤 Importar backup</button>
   <button class="menu-item menu-close" id="menuClose">Fechar</button>
 </div></div>
 
@@ -452,25 +448,7 @@ async function verificarAtualizacao(){
   }catch{showToast("Não foi possível verificar a atualização.")}
 }
 
-document.getElementById("menuBtn").onclick=()=>{
-  const modal=document.getElementById("menuModal");
-  const busca=document.getElementById("menuSearch");
-  busca.value=document.getElementById("searchInput").value;
-  modal.classList.add("open");
-  setTimeout(()=>busca.focus(),120);
-};
-document.getElementById("menuSearch").addEventListener("input",e=>{
-  document.getElementById("searchInput").value=e.target.value;
-  switchPage("notesPage");
-  mostrar();
-});
-document.getElementById("menuSearch").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    document.getElementById("menuModal").classList.remove("open");
-    switchPage("notesPage");
-    document.getElementById("searchInput").focus();
-  }
-});
+document.getElementById("menuBtn").onclick=()=>document.getElementById("menuModal").classList.add("open");
 document.getElementById("menuClose").onclick=()=>document.getElementById("menuModal").classList.remove("open");
 document.getElementById("menuModal").addEventListener("click",e=>{if(e.target.id==="menuModal")e.currentTarget.classList.remove("open")});
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>fecharModal(b.dataset.close));
