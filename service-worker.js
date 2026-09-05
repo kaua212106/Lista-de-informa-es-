@@ -1,5 +1,5 @@
-const CACHE_NAME="minhas-anotacoes-v4";
-const APP_SHELL=["./","./index.html","./manifest.json","./icone.png",'./auth-guard-v3.js'];
+const CACHE_NAME="minhas-anotacoes-v5-central-sync";
+const APP_SHELL=["./","./index.html","./manifest.json","./icone.png",'./auth-guard-v3.js','./central-sync.js'];
 const OPTIONAL=["https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"];
 
 self.addEventListener("install",event=>{
